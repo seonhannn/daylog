@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "445653892967",
+    "project_id": "day-log-3440b",
+    "storage_bucket": "day-log-3440b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:445653892967:android:acc7b8bd420d89b3a5b9c2",
+        "android_client_info": {
+          "package_name": "seonhannn.day_log"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "445653892967-or0tt027rudrsh6hbpjoqu4ml2asrke2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyATZuG1dMRf5najMxPncEALt6af531AVBw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "445653892967-or0tt027rudrsh6hbpjoqu4ml2asrke2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
