@@ -1,5 +1,8 @@
 import 'dart:async';
 import 'package:date_format/date_format.dart';
+import 'package:day_log/letter.dart';
+import 'package:day_log/local_notification.dart';
+import 'package:day_log/post_box.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -13,6 +16,8 @@ import 'firebase_options.dart';
 import 'my_page.dart';
 import 'calendar.dart';
 import 'upload.dart';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/data/latest.dart' as tz;
 
 final FirebaseFirestore firestore = FirebaseFirestore.instance;
 final auth = FirebaseAuth.instance;
@@ -47,7 +52,6 @@ void main() async {
       runApp(GetMaterialApp(
         home: MyApp(),
         debugShowCheckedModeBanner: false,
-        initialBinding: BindingsBuilder(() {}),
       ));
     },
   );
@@ -86,8 +90,8 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    super.initState();
     getUserId();
+
     userCheck = FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user != null) {
         // 이미 로그인
@@ -99,6 +103,10 @@ class _MyAppState extends State<MyApp> {
       setState(() {});
       userCheck.cancel();
     });
+
+    LocalNotification.initialize();
+    tz.initializeTimeZones();
+    super.initState();
   }
 
   // 캘린더에서 선택한 날짜 가져오기
@@ -132,6 +140,12 @@ class _MyAppState extends State<MyApp> {
             ),
           ),
           actions: [
+            TextButton(
+                onPressed: () {
+                  print("눌림");
+                  LocalNotification.showNotification();
+                },
+                child: Text("알람 테스트")),
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: Row(
@@ -219,7 +233,7 @@ class _MyAppState extends State<MyApp> {
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
-              Calendar(getFocusedDay: getFocusedDay),
+              Calendar(getFocusedDay: getFocusedDay, uid: uid),
               SizedBox(
                 height: 50,
               ),
@@ -407,18 +421,30 @@ class _MyAppState extends State<MyApp> {
               SizedBox(
                 height: 30,
               ),
-              TextButton(
-                  onPressed: () {
-                    Get.to(Upload(uid: uid));
-                  },
-                  child: Text(
-                    "기록하기",
-                    style: TextStyle(
-                        color: Colors.grey[400],
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16.0,
-                        fontFamily: 'NotoSerif'),
-                  ))
+              Container(
+                  child: focusDay.isAfter(DateTime.now())
+                      ? TextButton(
+                          onPressed: () {
+                            Get.to(Letter(focusDay: focusDay, uid: uid));
+                          },
+                          child: Text("편지보내기",
+                              style: TextStyle(
+                                  color: Colors.grey[400],
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16.0,
+                                  fontFamily: 'NotoSerif')))
+                      : TextButton(
+                          onPressed: () {
+                            Get.to(Upload(uid: uid, focusDay: focusDay));
+                          },
+                          child: Text(
+                            "기록하기",
+                            style: TextStyle(
+                                color: Colors.grey[400],
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16.0,
+                                fontFamily: 'NotoSerif'),
+                          ))),
             ],
           ),
         ));

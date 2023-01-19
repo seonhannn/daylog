@@ -141,31 +141,6 @@ class _MyPageState extends State<MyPage> {
                             );
                           },
                         )),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        TextButton(
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    content: Container(
-                                      child: Text("유료 결제하셈"),
-                                    ),
-                                  );
-                                },
-                              );
-                              // Get.to(PostBox());
-                            },
-                            child: Text(
-                              "우체통",
-                              style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16.0,
-                                  fontFamily: 'NotoSerif'),
-                            ))
                       ],
                     );
                   } else {

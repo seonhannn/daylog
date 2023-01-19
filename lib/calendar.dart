@@ -8,9 +8,9 @@ import 'package:table_calendar/table_calendar.dart';
 import 'main.dart';
 
 class Calendar extends StatefulWidget {
-  const Calendar({super.key, required this.getFocusedDay});
+  const Calendar({super.key, required this.getFocusedDay, required this.uid});
 
-  final getFocusedDay;
+  final getFocusedDay, uid;
 
   @override
   State<Calendar> createState() => _CalendarState();
@@ -19,7 +19,7 @@ class Calendar extends StatefulWidget {
 class _CalendarState extends State<Calendar> {
   DateTime today = DateTime.now();
   DateTime day = DateTime.now();
-  late QuerySnapshot<Map<String, dynamic>> doc;
+  var event;
 
   void _onDaySelected(DateTime day, DateTime focusedDay) async {
     today = day;
@@ -28,7 +28,11 @@ class _CalendarState extends State<Calendar> {
   }
 
   getData() async {
-    doc = await firestore.collection("data").get();
+    event = await firestore
+        .collection("data")
+        .doc(widget.uid)
+        .collection('userData')
+        .get();
   }
 
   @override

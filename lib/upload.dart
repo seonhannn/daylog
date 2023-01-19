@@ -6,8 +6,8 @@ import 'package:intl/intl.dart';
 import 'main.dart';
 
 class Upload extends StatefulWidget {
-  const Upload({super.key, required this.uid});
-  final uid;
+  const Upload({super.key, required this.uid, required this.focusDay});
+  final uid, focusDay;
 
   @override
   State<Upload> createState() => _UploadState();
@@ -28,7 +28,7 @@ class _UploadState extends State<Upload> {
       firestore.collection('data').doc(widget.uid).collection('userData').add({
         'title': inputTitle,
         'content': inputText,
-        'date': Timestamp.now(),
+        'date': widget.focusDay,
         'color': formatColor
       });
     } catch (e) {
@@ -121,7 +121,7 @@ class _UploadState extends State<Upload> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      today,
+                      DateFormat('MM-dd').format(widget.focusDay),
                       style: TextStyle(
                           color: Colors.black54,
                           fontFamily: 'Lora',

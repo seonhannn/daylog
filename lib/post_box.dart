@@ -1,10 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:intl/intl.dart';
 import 'main.dart';
 
 class PostBox extends StatefulWidget {
-  const PostBox({super.key});
+  const PostBox({super.key, required this.focusDay});
+
+  final focusDay;
 
   @override
   State<PostBox> createState() => _PostBoxState();
@@ -13,6 +17,7 @@ class PostBox extends StatefulWidget {
 class _PostBoxState extends State<PostBox> {
   final boardController = TextEditingController();
   String today = DateFormat('MM-dd').format(DateTime.now());
+  DateTime afterOneDay = DateTime.now().subtract(Duration(days: 1));
   late DateTime targetDate;
 
   // 내용 추가
@@ -28,6 +33,13 @@ class _PostBoxState extends State<PostBox> {
       print(e);
     }
   }
+
+  // // 편지 데이터 저장
+  // addLetter() {
+  //   try {
+  //     String inputText = boardController.text.toString();
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -69,29 +81,49 @@ class _PostBoxState extends State<PostBox> {
                   color: Colors.black54,
                   fontFamily: 'NotoSerif'),
             ),
+            Container(
+              width: double.infinity,
+              child: TextField(
+                controller: boardController,
+                keyboardType: TextInputType.multiline,
+                maxLines: 18,
+                style: TextStyle(fontFamily: 'Skudy', color: Colors.black54),
+                decoration: InputDecoration(
+                    hintText: "편지의 내용을 작성해주세요.",
+                    hintStyle: TextStyle(color: Colors.black26),
+                    contentPadding: EdgeInsets.all(24),
+                    focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey)),
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                        borderSide: BorderSide(color: Colors.grey))),
+              ),
+            ),
             TextButton(
-                onPressed: () async {
-                  // 날짜 선택
-                  DateTime? newDate = await showDatePicker(
-                      builder: (context, child) {
-                        return Theme(
-                          child: child!,
-                          data: Theme.of(context).copyWith(
-                            colorScheme: ColorScheme.light(
-                                primary: Color.fromARGB(255, 168, 168, 168)),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        content: Container(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [Text("진짜 보낸당~~")],
                           ),
-                        );
-                      },
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(2023, 1, 1),
-                      lastDate: DateTime(2023, 12, 31));
-
-                  if (newDate == null) return;
-                  targetDate = newDate;
-                  setState(() {});
+                        ),
+                        actions: [
+                          TextButton(onPressed: () {}, child: Text("확인")),
+                          TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text("취소"))
+                        ],
+                      );
+                    },
+                  );
                 },
-                child: Text("전송할 날짜 선택"))
+                child: Text("전송하기"))
           ],
         ),
       ),
